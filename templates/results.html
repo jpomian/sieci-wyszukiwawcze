@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Book</th>
+                <th>Series</th>
+                <th>Release number</th>
+                <th>Author</th>
+                <th>Description</th>
+                <th>Num Pages</th>
+                <th>Format</th>
+                <th>Genres</th>
+                <th>Publication Date</th>
+                <th>Rating</th>
+                <th>Number of voters</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in results.iterrows() %}
+                <tr>
+                    <td>{{ row['id'] }}</td>
+                    <td>{{ row['Book'] }}</td>
+                    <td>{{ row['Series'] }}</td>
+                    <td>{{ row['Release number'] }}</td>
+                    <td>{{ row['Author'] }}</td>
+                    <td>{{ row['Description'] }}</td>
+                    <td>{{ row['Num Pages'] }}</td>
+                    <td>{{ row['Format'] }}</td>
+                    <td>{{ row['Genres'] }}</td>
+                    <td>{{ row['Publication Date'] }}</td>
+                    <td>{{ row['Rating'] }}</td>
+                    <td>{{ row['Number of voters'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
