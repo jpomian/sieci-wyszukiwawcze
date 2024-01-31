@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Search</title>
+</head>
+<body>
+    <h1>Advanced Search</h1>
+    <form action="/advanced_search" method="post">
+        <label for="search_title">Enter Book Title (optional):</label>
+        <input type="text" id="search_title" name="search_title">
+
+        <label for="min_rating">Minimum Rating:</label>
+        <input type="range" id="min_rating" name="min_rating" min="1" max="5" step="0.1" value="1">
+        <span id="min_rating_value">1.0</span>
+
+        <label for="max_rating">Maximum Rating:</label>
+        <input type="range" id="max_rating" name="max_rating" min="1" max="5" step="0.1" value="5">
+        <span id="max_rating_value">5.0</span>
+
+        <label for="min_pages">Minimum Number of Pages:</label>
+        <input type="range" id="min_pages" name="min_pages" min="0" max="1000" step="50" value="0">
+        <span id="min_pages_value">0</span>
+
+        <label for="max_pages">Maximum Number of Pages:</label>
+        <input type="range" id="max_pages" name="max_pages" min="0" max="1000" step="50" value="1000">
+        <span id="max_pages_value">1000</span>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <script>
+        // Display current slider values
+        document.getElementById('min_rating').addEventListener('input', function() {
+            document.getElementById('min_rating_value').innerHTML = this.value;
+        });
+
+        document.getElementById('max_rating').addEventListener('input', function() {
+            document.getElementById('max_rating_value').innerHTML = this.value;
+        });
+
+        document.getElementById('min_pages').addEventListener('input', function() {
+            document.getElementById('min_pages_value').innerHTML = this.value;
+        });
+
+        document.getElementById('max_pages').addEventListener('input', function() {
+            document.getElementById('max_pages_value').innerHTML = this.value;
+        });
+    </script>
+</body>
+</html>

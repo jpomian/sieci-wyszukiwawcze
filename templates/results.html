@@ -11,37 +11,53 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Book</th>
-                <th>Series</th>
-                <th>Release number</th>
-                <th>Author</th>
-                <th>Description</th>
-                <th>Num Pages</th>
-                <th>Format</th>
-                <th>Genres</th>
-                <th>Publication Date</th>
-                <th>Rating</th>
-                <th>Number of voters</th>
+                <th>Książka</th>
+                <th>Dystans Levenshtein'a</th>
+                <th>Podobieństwo Jaccard'a</th>
+                <th>Współczynnik Dice'a</th>
+                <th>Indeks LSI</th>
             </tr>
         </thead>
         <tbody>
             {% for index, row in results.iterrows() %}
                 <tr>
                     <td>{{ row['id'] }}</td>
-                    <td>{{ row['Book'] }}</td>
-                    <td>{{ row['Series'] }}</td>
-                    <td>{{ row['Release number'] }}</td>
-                    <td>{{ row['Author'] }}</td>
-                    <td>{{ row['Description'] }}</td>
-                    <td>{{ row['Num Pages'] }}</td>
-                    <td>{{ row['Format'] }}</td>
-                    <td>{{ row['Genres'] }}</td>
-                    <td>{{ row['Publication Date'] }}</td>
-                    <td>{{ row['Rating'] }}</td>
-                    <td>{{ row['Number of voters'] }}</td>
+                    <td><a href="{{ url_for('book_detail', book_id=row['id']) }}">{{ row['Book'] }}</a></td>
+                    <td>{{ row['Levenshtein_distance'] }}</td>
+                    <td>{{ row['Jaccard_index'] }}</td>
+                    <td>{{ row['Dice_coefficient'] }}</td>
+                    <td>{{ row['LSA_similarity'] }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    {% if results.empty %} <p>Nie znaleziono książek dla termu: "{{ searched_term }}"</p> {% endif %}
+    {% if not related_results.empty %}
+    <h2>Podobne książki</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Książka</th>
+                <th>Dystans Levenshtein'a</th>
+                <th>Podobieństwo Jaccard'a</th>
+                <th>Współczynnik Dice'a</th>
+                <th>Indeks LSI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in related_results.iterrows() %}
+                <tr>
+                    <td>{{ row['id'] }}</td>
+                    <td><a href="{{ url_for('book_detail', book_id=row['id']) }}">{{ row['Book'] }}</a></td>
+                    <td>{{ row['Levenshtein_distance'] }}</td>
+                    <td>{{ row['Jaccard_index'] }}</td>
+                    <td>{{ row['Dice_coefficient'] }}</td>
+                    <td>{{ row['LSA_similarity'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 </body>
 </html>

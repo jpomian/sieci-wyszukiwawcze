@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book_details['Book'] }}</title>
+    <h1>Details</h1>
+</head>
+<body>
+    <h1>{{ book_details['Book'] }} Details</h1>
+    <p>ID: {{ book_details['id'] }}</p>
+    <p>Tytuł: {{ book_details['Book'] }}</p>
+    <p>Seria: {{ book_details['Series'] }}</p>
+    <p>Wydanie: {{ book_details['Release number'] }}</p>
+    <p>Autor: {{ book_details['Author'] }}</p>
+    <p>Opis: {{ book_details['Description'] }}</p>
+    <p>Liczba stron: {{ book_details['Num Pages'] }}</p>
+    <p>Format:{{ book_details['Format'] }}</p>
+    <p>Rodzaj: {{ book_details['Genres'] }}</p>
+    <p>Data publikacji: {{ book_details['Publication Date'] }}</p>
+    <p>Ocena: {{ book_details['Rating'] }}</p>
+    <p>Liczba głosujących: {{ book_details['Number of voters'] }}</p>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>
