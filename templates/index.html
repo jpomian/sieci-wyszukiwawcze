@@ -3,14 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Search</title>
+    <title>Biblioteka książek</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        div {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 44px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px; /* Add some spacing between label and input */
+        }
+
+        input {
+            width: 300px; /* Adjust the width as needed */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px; /* Add smooth edges */
+            box-sizing: border-box;
+            margin-bottom: 15px; /* Add some spacing between input and button */
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px; /* Add smooth edges */
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Book Search</h1>
-    <form action="/search" method="post">
-        <label for="search_term">Enter Book Title:</label>
-        <input type="text" id="search_term" name="search_term" required>
-        <button type="submit">Search</button>
-    </form>
+    <div>
+        <h1>Biblioteka książek</h1>
+        <form action="/search" method="post">
+            <label for="search_term">Wpisz pożądany tytuł książki:</label>
+            <input type="text" id="search_term" name="search_term" required>
+            <button type="submit">Szukaj</button>
+        </form>
+    </div>
 </body>
 </html>

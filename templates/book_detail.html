@@ -4,21 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book_details['Book'] }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #4db317;
+        }
+
+        h2 {
+            color: #4db317;
+            margin-top: 20px;
+        }
+
+        p, ul, li, a, strong {
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        a {
+            color: #4db317;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        a.return-link {
+            display: block;
+            text-align: center;
+            font-size: 24px; 
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add a slight shadow */
+            margin-top: 20px; /* Add some top margin for spacing */
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #description-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #description-en,
+        #description-pl {
+            width: 48%;
+        }
+
+        #description-en {
+            text-align: left;
+        }
+
+        #description-pl {
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ book_details['Book'] }} Details</h1>
-    <p>ID: {{ book_details['id'] }}</p>
-    <p>Tytuł: {{ book_details['Book'] }}</p>
-    <p>Seria: {{ book_details['Series'] }}</p>
-    <p>Wydanie: {{ book_details['Release number'] }}</p>
-    <p>Autor: {{ book_details['Author'] }}</p>
-    <p>Opis: {{ book_details['Description'] }}</p>
-    <p>Liczba stron: {{ book_details['Num Pages'] }}</p>
-    <p>Format:{{ book_details['Format'] }}</p>
-    <p>Rodzaj: {{ book_details['Genres'] }}</p>
-    <p>Data publikacji: {{ book_details['Publication Date'] }}</p>
-    <p>Ocena: {{ book_details['Rating'] }}</p>
-    <p>Liczba głosujących: {{ book_details['Number of voters'] }}</p>
+    <h1>{{ book_details['Book'] }}</h1>
+    
+    <div class="info-box">
+        <p><strong>ID:</strong> {{ book_details['id'] }}</p>
+        <p><strong>Seria:</strong> {{ book_details['Series'] }}</p>
+        <p><strong>Wydanie:</strong> {{ book_details['Release number'] }}</p>
+        <p><strong>Autor:</strong> {{ book_details['Author'] }}</p>
+    </div>
+    
+    <div id="description-container">
+        <div class="info-box" id="description-en">
+            <p><strong>Opis (EN):</strong> {{ book_details['Description'] }}</p>
+        </div>
+        <div class="info-box" id="description-pl">
+            <p><strong>Opis (PL):</strong> {{ book_trans }}</p>
+        </div>
+    </div>
+    
+    <div class="info-box">
+        <p><strong>Liczba stron:</strong> {{ book_details['Num Pages'] }}</p>
+        <p><strong>Format:</strong> {{ book_details['Format'] }}</p>
+        <p><strong>Rodzaj:</strong> {{ book_details['Genres'] }}</p>
+        <p><strong>Data publikacji:</strong> {{ book_details['Publication Date'] }}</p>
+        <p><strong>Ocena:</strong> {{ book_details['Rating'] }}</p>
+        <p><strong>Liczba głosujących:</strong> {{ book_details['Number of voters'] }}</p>
+    </div>
 
     <h2>Podobne Książki</h2>
     <ul>
@@ -30,7 +120,7 @@
         {% endfor %}
     </ul>
 
-    <a href="{{ url_for('home') }}">Back to Home</a>
+    <a class="return-link" href="{{ url_for('home') }}">Powrót do strony głównej</a>
 
 </body>
 </html>
