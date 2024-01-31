@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import linear_kernel
+from sklearn.neighbors import NearestNeighbors
 import Levenshtein  # Import the Levenshtein module
 
 app = Flask(__name__)
@@ -19,6 +20,12 @@ tfidf_matrix = tfidf_vectorizer.fit_transform(df['Description'])
 num_topics = 10  # You can adjust the number of topics based on your preferences
 lsa = TruncatedSVD(n_components=num_topics)
 lsa_matrix = lsa.fit_transform(tfidf_matrix)
+
+# Fit k-NN model on selected features
+selected_features = ['Book', 'Author', 'Genres']
+feature_matrix = df[selected_features].fillna('').values
+knn_model = NearestNeighbors(n_neighbors=5, algorithm='brute', metric='cosine')
+knn_model.fit(tfidf_matrix)
 
 @app.route('/')
 def home():
@@ -49,9 +56,6 @@ def search():
     # Perform a case-insensitive search on the 'Book' column
     exact_match_results = df[df['Book'].str.contains(search_term, case=False)]
 
-    # Calculate TF-IDF scores for the search term
-    search_tfidf = tfidf_vectorizer.transform([search_term])
-
     # Calculate cosine similarity between search term and book descriptions
     cosine_similarities = linear_kernel(search_tfidf, tfidf_matrix).flatten()
 
@@ -66,20 +70,21 @@ def search():
 
     return render_template('results.html', results=exact_match_results, related_results=related_results, searched_term=search_term)
 
-@app.route('/check_session')
-def check_session():
-    viewed_books = session.get('viewed_books', [])
-    print("Viewed Books:", viewed_books)
-    return 'Check your console for session information'
-
 
 @app.route('/books/<int:book_id>')
 def book_detail(book_id):
-    # Get the book details using the provided book_id
     book_details = df[df['id'] == book_id].squeeze()
 
     if book_details is not None:
-        return render_template('book_detail.html', book_details=book_details)
+        # Use k-NN to find similar books
+        query_features = book_details[selected_features].fillna('').values
+        query_tfidf = tfidf_vectorizer.transform(query_features)
+        _, indices = knn_model.kneighbors(query_tfidf, n_neighbors=5)
+
+        # Retrieve similar books based on k-NN results
+        similar_books = df.iloc[indices[0]]
+
+        return render_template('book_detail.html', book_details=book_details, similar_books=similar_books)
     else:
         # Redirect to home if book_id is not found
         return redirect(url_for('home'))

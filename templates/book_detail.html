@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book_details['Book'] }}</title>
-    <h1>Details</h1>
 </head>
 <body>
     <h1>{{ book_details['Book'] }} Details</h1>
@@ -20,6 +19,18 @@
     <p>Data publikacji: {{ book_details['Publication Date'] }}</p>
     <p>Ocena: {{ book_details['Rating'] }}</p>
     <p>Liczba głosujących: {{ book_details['Number of voters'] }}</p>
+
+    <h2>Podobne Książki</h2>
+    <ul>
+        {% for index, row in similar_books.iterrows() %}
+            <li>
+                <a href="{{ url_for('book_detail', book_id=row['id']) }}">{{ row['Book'] }}</a>
+                by {{ row['Author'] }}
+            </li>
+        {% endfor %}
+    </ul>
+
     <a href="{{ url_for('home') }}">Back to Home</a>
+
 </body>
 </html>
