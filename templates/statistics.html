@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statystyki</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px; /* Add padding to the body */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header {
+            width: 100%;
+            text-align: center;
+            font-size: 24px; /* Adjust the font size of the header */
+            margin-bottom: 20px; /* Add margin between the header and images */
+        }
+
+        .image-container {
+            width: 48%; /* Set the width of each container */
+            margin-bottom: 20px; /* Add margin between the containers */
+            box-sizing: border-box; /* Include padding and border in the total width */
+        }
+
+        .image-container img {
+            width: 100%; /* Make the image fill its container */
+            border-radius: 8px; /* Add rounded corners to the images */
+        }
+
+        .image-text {
+            margin-top: 10px; /* Add margin between the image and text */
+            text-align: center;
+        }
+
+        a {
+            color: #9cb317;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        a.return-link {
+            width: 100%;
+            text-align: center;
+            font-size: 24px; 
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add a slight shadow */
+            margin-top: 20px; /* Add some top margin for spacing */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Wykresy dla całego zbioru danych</h1>
+    </div>
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='chart/bar1.png') }}" class="image" />
+        <p class="image-text">Wykres słupkowy (pełny przedział)</p>
+    </div>
+
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='chart/bar2.png') }}" class="image" />
+        <p class="image-text">Wykres słupkowy (zbliżony)</p>
+    </div>
+
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='chart/linear1.png') }}" class="image" />
+        <p class="image-text">Liniowy wykres z przedziałem czasowym</p>
+    </div>
+
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='chart/bell1.png') }}" class="image" />
+        <p class="image-text">Krzywa Gaussa dla wszystkich ocen</p>
+    </div>
+
+    <a class="return-link" href="{{ url_for('home') }}">Powrót do strony głównej</a>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, session
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
@@ -8,8 +8,9 @@ import Levenshtein
 from deep_translator import GoogleTranslator
 
 app = Flask(__name__)
+app.secret_key = '0x2041d7cfbcc8f351afd657c60d4d5f7fb0c87d8529124b91203c9c518f33681e'
 
-df = pd.read_csv('books.csv')
+df = pd.read_csv('books2.csv')
 
 df['Description'] = df['Description'].fillna('') # Uzupełnij wartości NaN pustym ciągiem znaków
 tfidf_vectorizer = TfidfVectorizer(stop_words='english')
@@ -73,9 +74,24 @@ def book_detail(book_id):
 
         similar_books = df.iloc[indices]
 
+        viewed_books = session.get('viewed_books', [])
+        if book_id not in viewed_books:
+            viewed_books.append(book_id)
+            session['viewed_books'] = viewed_books[-5:]
+
         return render_template('book_detail.html', book_details=book_details, book_trans=book_desc_translated, similar_books=similar_books)
     else:
         return redirect(url_for('home'))
+
+@app.route('/cache')
+def viewed_books():
+    # Retrieve the last 5 viewed books from the session
+    viewed_books = session.get('viewed_books', [])
+    return viewed_books
+
+@app.route('/stats')
+def stats():
+    return render_template('statistics.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
