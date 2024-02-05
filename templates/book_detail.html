@@ -81,6 +81,13 @@
             text-align: right;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script> 
+        $(function(){
+          var bookId = {{ book_details['id'] }};
+          $("#includedContent").load("../chart/" + bookId); 
+        });
+    </script>         
 </head>
 <body>
     <h1>{{ book_details['Book'] }}</h1>
@@ -109,6 +116,8 @@
         <p><strong>Ocena:</strong> {{ book_details['Rating'] }}</p>
         <p><strong>Liczba głosujących:</strong> {{ book_details['Number of voters'] }}</p>
     </div>
+
+    <div id="includedContent"></div>
 
     <h2>Podobne Książki</h2>
     <ul>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            font-size: 32px;
+        }
+
+        ol {
+            padding: 0;
+        }
+
+        li a {
+            text-decoration: none;
+            color: green;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-style: italic;
+        }
+
+        .center {
+            text-align: center;
+            list-style-position: inside;
+        }
+
+        a.return-link {
+            display: block;
+            text-align: center;
+            font-size: 24px; 
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add a slight shadow */
+            margin-top: 20px; /* Add some top margin for spacing */
+        }
+        
+    </style>
+</head>
+
+<body>
+    <h2>Ostatnio oglądane:</h2>
+    <ol reversed class="center">
+        {% for cached_book in cached_books %}
+            <li>
+                <a href="{{ url_for('book_detail', book_id=cached_book['id']) }}">{{ cached_book['Book'] }}</a>
+            </li>
+            <p>{{ cached_book['Author'] }}</p>
+        {% endfor %}
+    </ol>
+
+    <a class="return-link" href="{{ url_for('home') }}">Powrót do strony głównej</a>
+    
+</body>
+
+</html>

@@ -7,6 +7,14 @@ from sklearn.neighbors import NearestNeighbors
 import Levenshtein
 from deep_translator import GoogleTranslator
 
+# Biblioteki dla wykresów
+
+import numpy as np
+from scipy.stats import norm
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
+
 app = Flask(__name__)
 app.secret_key = '0x2041d7cfbcc8f351afd657c60d4d5f7fb0c87d8529124b91203c9c518f33681e'
 
@@ -85,13 +93,52 @@ def book_detail(book_id):
 
 @app.route('/cache')
 def viewed_books():
-    # Retrieve the last 5 viewed books from the session
     viewed_books = session.get('viewed_books', [])
-    return viewed_books
+    cached_books = []
+
+    for book_id in viewed_books:
+        cached_book = df[df['id'] == book_id].squeeze()
+        if cached_book is not None:
+            cached_books.append(cached_book)
+    print(cached_books)
+
+    return render_template('cache.html', cached_books=cached_books)
 
 @app.route('/stats')
 def stats():
     return render_template('statistics.html')
+
+@app.route('/chart/<int:book_id>')
+def rating_percentile_chart(book_id):
+    book_rating = df[df['id'] == book_id]['Rating'].iloc[0]
+
+    mean_rating = df['Rating'].mean()
+    std_dev_rating = df['Rating'].std()
+
+    plt.figure(figsize=(6, 4))
+    ax = plt.gca()
+
+    ax.hist(df['Rating'], bins=20, density=False, color='green', alpha=0.6, label='Oceny książek')
+
+    ax.axvline(x=book_rating, color='red', linestyle='--', label=f'Ocena książki: {book_rating}')
+
+    ax.set_title(f"Ocena książki (ID: {book_id})")
+    ax.set_xlabel('Ocena')
+    ax.set_ylabel('Ilość')
+    ax.legend()
+
+    percentile = norm.cdf(book_rating, loc=mean_rating, scale=std_dev_rating) * 100
+
+    plt_base64 = plot_to_base64(ax)
+
+    return render_template('rchart.html', plot_base64=plt_base64, percentile=round(percentile, 2))
+
+def plot_to_base64(ax):
+    img_stream = BytesIO()
+    ax.figure.savefig(img_stream, format='png')
+    img_stream.seek(0)
+    img_base64 = base64.b64encode(img_stream.getvalue()).decode('utf-8')
+    return img_base64
 
 if __name__ == '__main__':
     app.run(debug=True)
