@@ -16,7 +16,7 @@ import base64
 from io import BytesIO
 
 app = Flask(__name__)
-app.secret_key = '0x2041d7cfbcc8f351afd657c60d4d5f7fb0c87d8529124b91203c9c518f33681e'
+app.secret_key = '0x2041d7cfbcc8f351afd657c60d4d5f7fb0c87d8529124b91203c9c518f33681e' # hash bloku etherscan.io
 
 df = pd.read_csv('books2.csv')
 
@@ -40,21 +40,32 @@ def home():
 @app.route('/search', methods=['POST'])
 def search():
     search_term = request.form.get('search_term')
+    search_option = request.form.get('search_option')
 
-    df['Levenshtein_distance'] = df['Book'].apply(lambda x: Levenshtein.distance(x.lower(), search_term.lower()))
+    if search_option == 'title':
+        search_attr = df['Book']
+        search_reversed = df['Description']
+    elif search_option == 'description':
+        search_attr = df['Description']
+        search_reversed = df['Book']
+    else:
+        search_attr = df['Book']
+        search_reversed = df['Description']
+
+    df['Levenshtein_distance'] = search_attr.apply(lambda x: Levenshtein.distance(x.lower(), search_term.lower()))
 
     search_term_set = set(search_term.lower().split())
-    df['Jaccard_index'] = df['Book'].apply(lambda x: len(set(x.lower().split()) & search_term_set) / len(set(x.lower().split()) | search_term_set))
+    df['Jaccard_index'] = search_attr.apply(lambda x: len(set(x.lower().split()) & search_term_set) / len(set(x.lower().split()) | search_term_set))
 
     search_term_set = set(search_term.lower())
-    df['Dice_coefficient'] = df['Book'].apply(lambda x: 2 * len(search_term_set & set(x.lower())) / (len(search_term_set) + len(set(x.lower()))))
+    df['Dice_coefficient'] = search_attr.apply(lambda x: 2 * len(search_term_set & set(x.lower())) / (len(search_term_set) + len(set(x.lower()))))
 
     search_tfidf = tfidf_vectorizer.transform([search_term])
     search_lsa = lsa.transform(search_tfidf)
 
     df['LSA_similarity'] = linear_kernel(search_lsa, lsa_matrix).flatten()
 
-    exact_match_results = df[df['Book'].str.contains(search_term, case=False)]
+    exact_match_results = df[search_attr.str.contains(search_term, case=False)]
 
     cosine_similarities = linear_kernel(search_tfidf, tfidf_matrix).flatten()
 
@@ -62,9 +73,14 @@ def search():
 
     results = df.iloc[top_indices]
 
-    related_results = df[~df['Book'].isin(results['Book'])].sample(5)
+    related_results_filtered = df[search_reversed.str.contains(search_term, case=False)]
+    if len(related_results_filtered) >= 5:
+        related_results = related_results_filtered.sample(5, replace=False)
+    else:
+        related_results = related_results_filtered
 
-    return render_template('results.html', results=exact_match_results, related_results=related_results, searched_term=search_term)
+
+    return render_template('results.html', results=exact_match_results, related_results=related_results, searched_term=search_term, search_option=search_option)
 
 @app.route('/books/<int:book_id>')
 def book_detail(book_id):
@@ -100,7 +116,6 @@ def viewed_books():
         cached_book = df[df['id'] == book_id].squeeze()
         if cached_book is not None:
             cached_books.append(cached_book)
-    print(cached_books)
 
     return render_template('cache.html', cached_books=cached_books)
 
@@ -132,6 +147,31 @@ def rating_percentile_chart(book_id):
     plt_base64 = plot_to_base64(ax)
 
     return render_template('rchart.html', plot_base64=plt_base64, percentile=round(percentile, 2))
+
+@app.route('/genres')
+def display_genres():
+    # Convert the 'FormattedGenres' column to strings, handling possible float values
+    genres = set(','.join(str(genre) for genre in df['FormattedGenres']).split(','))
+
+    sorted_genres = {}
+
+    for genre in genres:
+        genre = genre.strip()  # Remove leading and trailing spaces
+        first_character = genre[0]
+        if not first_character.isnumeric():  # Skip if the first character is numeric
+            first_letter = first_character.upper()
+            if first_letter not in sorted_genres:
+                sorted_genres[first_letter] = []
+            sorted_genres[first_letter].append(genre)
+
+    # Sort genres under each letter alphabetically
+    for letter in sorted_genres:
+        sorted_genres[letter].sort()
+
+    sorted_keys = sorted(sorted_genres.keys())
+    
+    return render_template('genre.html', genres=sorted_genres, letters=sorted_keys)
+
 
 def plot_to_base64(ax):
     img_stream = BytesIO()

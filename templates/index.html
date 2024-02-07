@@ -43,6 +43,7 @@
 
         button {
             padding: 10px;
+            margin-top: 20px;
             background-color: #4CAF50;
             color: #fff;
             border: none;
@@ -50,6 +51,12 @@
             cursor: pointer;
             margin-right: 10px; /* Add some spacing between buttons */
         }
+
+        .radio-option {
+            display: inline-block;
+            margin-right: 20px; /* Adjust as needed */
+        }
+
     </style>
 </head>
 
@@ -59,11 +66,23 @@
         <form action="/search" method="post">
             <label for="search_term">Wpisz pożądany tytuł książki:</label>
             <input type="text" id="search_term" name="search_term" required>
+            <br>
+            <div class="radio-option">
+                <input type="radio" id="title_search" name="search_option" value="title" checked>
+                <label for="title_search">Szukaj po tytule</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="description_search" name="search_option" value="description">
+                <label for="description_search">Szukaj po opisie</label>
+            </div>
+            <br>
             <button type="submit">Szukaj</button>
         </form>
+        
 
         <div>
             <button onclick="window.location.href='stats'">Wykresy</button>
+            <button onclick="window.location.href='genres'">Gatunki</button>
             <button onclick="window.location.href='cache'">Pamięć podręczna</button>
         </div>
     </div>

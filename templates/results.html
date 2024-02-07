@@ -34,6 +34,11 @@
             /* Highlight row on hover */
         }
 
+        p {
+            text-align: center;
+            font-weight: bold;
+        }
+
         h1,
         h2 {
             text-align: center;
@@ -91,7 +96,7 @@
             {% endfor %}
         </tbody>
     </table>
-    {% if results.empty %} <p>Nie znaleziono książek dla termu: "{{ searched_term }}"</p> {% endif %}
+    {% if results.empty %} <p>Nie znaleziono dokładnych dopasowań dla termu: "{{ searched_term }}".</p> {% endif %}
     {% if not related_results.empty %}
     <h2>Podobne książki</h2>
     <table border="1">
@@ -118,6 +123,13 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if search_option == 'title' %}
+        <p>Znaleziono podobne książki zawierające wyraz "{{ searched_term }}" w opisie.</p>
+    {% endif %}
+    {% if search_option == 'description' %}
+        <p>Znaleziono podobne książki zawierające wyraz "{{ searched_term }}" w tytule.</p>
+    {% endif %}
+
     {% endif %}
 
     <a class="return-link" href="{{ url_for('home') }}">Powrót do strony głównej</a>
